@@ -1,0 +1,50 @@
+name: Feature to Staging, Main to Production
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run tests
+        run: |
+          echo "Running tests on ${{ github.ref_name }}..."
+          echo "All tests passed!"
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: test
+
+    if: startsWith(github.ref, 'refs/heads/feature/')
+
+    steps:
+      - name: Deploy to Staging
+        run: |
+          echo "Feature branch detected!"
+          echo "Branch  = ${{ github.ref_name }}"
+          echo "Deploying to STAGING..."
+          echo "URL = https://staging.my-app.com"
+          echo "Staging is live!"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: test
+
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "Main branch detected!"
+          echo "Deploying to PRODUCTION..."
+          echo "URL = https://my-app.com"
+          echo "Production is live!"
+          echo "Deployed by ${{ github.actor }}"
