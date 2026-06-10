@@ -23,3 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: echo "Security Scan Passed"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, test, security]
+
+    steps:
+      - run: echo "Deploy Successful"    
