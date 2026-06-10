@@ -1,0 +1,35 @@
+name: Environment Variables
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+env:
+  APP_NAME: my-web-app
+  APP_VERSION: "2.0"
+  ENVIRONMENT: production
+
+jobs:
+
+  show-variables:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Show app variables
+        run: |
+          echo "App Name    = ${{ env.APP_NAME }}"
+          echo "App Version = ${{ env.APP_VERSION }}"
+          echo "Environment = ${{ env.ENVIRONMENT }}"
+
+      - name: Show GitHub variables
+        run: |
+          echo "Repository = ${{ github.repository }}"
+          echo "Run Number = ${{ github.run_number }}"
+          echo "Triggered  = ${{ github.actor }}"
+
+      - name: Use variable in a message
+        run: echo "Deploying ${{ env.APP_NAME }} version ${{ env.APP_VERSION }} to ${{ env.ENVIRONMENT }}"
