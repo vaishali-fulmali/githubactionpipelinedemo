@@ -1,0 +1,35 @@
+name: Environment Variables
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+
+  workflow_dispatch:
+
+env:
+  APP_NAME: my-student-app
+  APP_VERSION: "1.0"
+  TEAM: devops-batch-1
+
+jobs:
+
+  show-variables:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Print all variables
+        run: |
+          echo "App Name   = ${{ env.APP_NAME }}"
+          echo "Version    = ${{ env.APP_VERSION }}"
+          echo "Team       = ${{ env.TEAM }}"
+          echo "Branch     = ${{ github.ref_name }}"
+          echo "Run Number = ${{ github.run_number }}"
+          echo "Triggered  = ${{ github.actor }}"
+
+      - name: Use variables in a sentence
+        run: |
+          echo "Deploying ${{ env.APP_NAME }} v${{ env.APP_VERSION }}"
+          echo "Team ${{ env.TEAM }} triggered run number ${{ github.run_number }}"
