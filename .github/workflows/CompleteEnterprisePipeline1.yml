@@ -6,19 +6,26 @@ on:
       - main
 
 jobs:
-
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Lint
-        run: echo "Lint Passed"
+      - run: echo "Lint Passed"
 
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: echo "Tests Passed"
 
-      - name: Test
-        run: echo "Tests Passed"
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Security Scan Passed"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, test, security]
+    steps:
+      - run: echo "Deployment Successful"
