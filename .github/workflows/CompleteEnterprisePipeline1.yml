@@ -1,10 +1,24 @@
-name: Test Workflow
+name: Enterprise Pipeline
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint
+        run: echo "Lint Passed"
+
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo Hello
+      - uses: actions/checkout@v4
+
+      - name: Test
+        run: echo "Tests Passed"
