@@ -1,0 +1,56 @@
+name: Full CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+
+  workflow_dispatch:
+
+env:
+  APP_NAME: my-app
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code quality
+        run: echo "Code quality passed!"
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run tests
+        run: |
+          echo "Test 1 : PASSED"
+          echo "Test 2 : PASSED"
+          echo "Test 3 : PASSED"
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+
+    if: startsWith(github.ref, 'refs/heads/feature/')
+
+    steps:
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying ${{ env.APP_NAME }} to STAGING"
+          echo "URL = https://staging.my-app.com"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "Deploying ${{ env.APP_NAME }} to PRODUCTION"
+          echo "By     = ${{ github.actor }}"
+          echo "URL    = https://my-app.com"
