@@ -1,0 +1,67 @@
+name: Complete Enterprise Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+  workflow_dispatch:
+
+env:
+  APP_NAME: enterprise-app
+  VERSION: "1.0"
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Code quality
+        run: echo "Code quality : PASSED"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          echo "Test 1 - Login   : PASSED"
+          echo "Test 2 - Signup  : PASSED"
+          echo "Test 3 - Profile : PASSED"
+          echo "3 out of 3 passed!"
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Security scan
+        run: echo "Security scan : PASSED"
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: [ lint, test, security ]
+    if: startsWith(github.ref, 'refs/heads/feature/')
+    steps:
+      - name: Deploy to Staging
+        run: |
+          echo "App     = ${{ env.APP_NAME }}"
+          echo "Version = ${{ env.VERSION }}"
+          echo "Branch  = ${{ github.ref_name }}"
+          echo "Staging is live!"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [ lint, test, security ]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "App     = ${{ env.APP_NAME }}"
+          echo "Version = ${{ env.VERSION }}"
+          echo "By      = ${{ github.actor }}"
+          echo "Run No  = ${{ github.run_number }}"
+          echo "Production is live!"
